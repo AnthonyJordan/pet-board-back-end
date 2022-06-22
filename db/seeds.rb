@@ -81,4 +81,3 @@ end
     )
 
 puts "✅ Done seeding!"
-# Faker::Creature::Dog.name, Faker::Creature::Dog.size, name: Faker::Name.name_with_middle

@@ -44,14 +44,16 @@ class ApplicationController < Sinatra::Base
     end
 
     post "/user" do
-      pet = User.create(user_params)
-      pet.to_json
+      user = User.create(user_params)
+      user.to_json
     end
 
     patch "user/:id" do
-      pet = User.find(params[:id])
-      pet.update(user_params)
-      pet.to_json
+      user = User.find(params[:id])
+      user.update(user_params)
+      user.to_json(
+        include: :pets
+      )
     end
 
     delete "users/:id" do
