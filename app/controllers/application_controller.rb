@@ -16,7 +16,9 @@ class ApplicationController < Sinatra::Base
 
   get "/users" do
     users = User.all 
-    users.to_json
+    users.to_json(
+      include: :pets
+    )
   end
 
   get '/users/:id' do
@@ -32,29 +34,33 @@ class ApplicationController < Sinatra::Base
       pet.to_json
     end
 
-    patch "pets/:id" do
+    patch "/pets/:id" do
       pet = Pet.find(params[:id])
       pet.update(pet_params)
       pet.to_json
     end
 
-    delete "pets/:id" do
+    delete "/pets/:id" do
       pet = Pet.find(params[:id])
       pet.destroy
     end
 
-    post "/user" do
+    post "/users" do
       pet = User.create(user_params)
-      pet.to_json
+      pet.to_json(
+        include: :pets
+      )
     end
 
-    patch "user/:id" do
-      pet = User.find(params[:id])
-      pet.update(user_params)
-      pet.to_json
+    patch "/users/:id" do
+      user = User.find(params[:id])
+      user.update(user_params)
+      user.to_json(
+        include: :pets
+      )
     end
 
-    delete "users/:id" do
+    delete "/users/:id" do
       user = User.find(params[:id])
       user.destroy
     end
@@ -62,7 +68,7 @@ class ApplicationController < Sinatra::Base
     def pet_params
       allowed_params = %w()
       params.select {|param,value| allowed_params.include?(param)}
-      allowed_params = %w(name description image_url)
+      allowed_params = %w(name description img_url user_id)
       params.filter {|param,value| allowed_params.include?(param)}
     end
 
