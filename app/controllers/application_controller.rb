@@ -1,10 +1,6 @@
 class ApplicationController < Sinatra::Base
   set :default_content_type, 'application/json'
   
-  # Add your routes here
-  get '/' do
-    "Sup Dog"
-  end
 
   get "/pets" do
     pets = Pet.all 
@@ -47,15 +43,33 @@ class ApplicationController < Sinatra::Base
       pet.destroy
     end
 
+    post "/user" do
+      pet = User.create(user_params)
+      pet.to_json
+    end
+
+    patch "user/:id" do
+      pet = User.find(params[:id])
+      pet.update(user_params)
+      pet.to_json
+    end
+
     delete "users/:id" do
       user = User.find(params[:id])
       user.destroy
     end
 
-    def dog_params
+    def pet_params
       allowed_params = %w()
       params.select {|param,value| allowed_params.include?(param)}
       allowed_params = %w(name description image_url)
+      params.filter {|param,value| allowed_params.include?(param)}
+    end
+
+    def user_params
+      allowed_params = %w()
+      params.select {|param,value| allowed_params.include?(param)}
+      allowed_params = %w(name)
       params.filter {|param,value| allowed_params.include?(param)}
     end
 
